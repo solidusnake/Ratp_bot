@@ -4,14 +4,11 @@ const config = require("./config");
 const dataService = require("./dataService");
 const bot = new Telegraf(config.botToken);
 const fetch = require("node-fetch");
-
-const menu = new TelegrafInlineMenu("Main Menu");
-const validez = new TelegrafInlineMenu("Validez");
-
 const { readFileSync } = require("fs");
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
+
 
 const helpMsg = `Command reference:
 /start - Start bot (mandatory in groups)
@@ -21,21 +18,73 @@ const helpMsg = `Command reference:
 /about - A propos du bot
 /help - Afficher la page d'aide'`;
 
-menu.urlButton("RATP-Bot", "https://github.com/solidusnake/Ratp_bot");
 
 const people = { Mark: {}, Paul: {} };
 const food = ["bread", "cake", "bananas"];
 
+  const menu = new TelegrafInlineMenu("Main Menu", recupligne());
+
+  menu.urlButton("RATP-Bot", "https://github.com/solidusnake/Ratp_bot");
+  var selectedKey = "b";
+ var copy = [];
+ var tesdd = [];
+  var ligne = ["Ligne 1", "Ligne 2", "Ligne 3", "Ligne 4"];
+  menu.select("Main", tesdd, {
+    setFunc: async (ctx, key) => {
+      selectedKey = key;
+
+      await ctx.answerCbQuery(`you selected ${key}`);
+    },
+    isSetFunc: (_ctx, key) => key === selectedKey
+  });
+
+
+function Affiche_tableau() {
+console.log("fefefeffee", tesdd);
+}
+
+  function recupligne(selectedKey) {
+    console.log(selectedKey + "ligne");
+      fetch("https://api-ratp.pierre-grimaud.fr/v4/lines")
+          .then(function(response) {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response.json();
+          })
+          .then(function(stories) {
+            stories.result.metros.forEach(item => {
+              tesdd.push(item.name);
+              //tesdd.push() = item.name.split();  
+            });
+          });
+  }
+
+  menu.setCommand("start");
+  const validez = new TelegrafInlineMenu("Validez");
+  menu.submenu("Validez", selectedKey, validez, {});
+
+  validez.question("Non Station", "add", {
+    questionText: "Quel nom de station voulez vous choisir",
+
+    setFunc: (_ctx, key) => {
+      people[key] = {};
+    }
+  });
+ var array = 30;
+
+  for (let index = 0; index < array; index++) {
+      validez.simpleButton(index.toString(), index.toString(), {
+        doFunc: async ctx => ctx.answerCbQuery(selectedKey),
+        joinLastRow: true,
+        hide: () => mainMenuToggle
+      });
+    
+  }
+
+
+
 /*menu transport*/
-var selectedKey = "b";
-menu.select("Main", ["Metro", "Bus", "RER", "Tram"], {
-  setFunc: async (ctx, key) => {
-    selectedKey = key;
-    await ctx.answerCbQuery(`you selected ${key}`);
-  },
-  isSetFunc: (_ctx, key) => key === selectedKey
-});
-menu.submenu("Validez", selectedKey, validez, {});
 
 /*menu transport*/
 
@@ -70,13 +119,6 @@ const foodSelectSubmenu = new TelegrafInlineMenu(foodSelectText)
     columns: 2
 })*/
 
-validez.question("Non Station", "add", {
-  questionText: "Quel nom de station voulez vous choisir",
-
-  setFunc: (_ctx, key) => {
-    people[key] = {};
-  }
-});
 
 /*fetch(url).then(function(response) {
         if (response.status >= 400) {
@@ -92,35 +134,47 @@ validez.question("Non Station", "add", {
             })
     }); 
 */
-let Rectangle = class Rectangle {
-  constructor(g) {
+class Requete {
+  constructor(g, f, h,tab) {
+    var tab = ["fefefefef"];
+    this.tab = tab;
     this.stories = g;
+    this.element = f;
+    this.line = h;
+    this.slug;
+    this.title;
+    this.message;
+    this.metros = "https://api-ratp.pierre-grimaud.fr/v4/traffic";
   }
-  get area() {
-    const url = "https://api-ratp.pierre-grimaud.fr/v4/traffic/metros";
+  trafic(stories) {
+    const url = this.metros;
     fetch(url)
-      .then(function(response) {
+      .then(response => {
         if (response.status >= 400) {
           throw new Error("Bad response from server");
         }
         return response.json();
       })
-      .then(function(stories) {
-        stories.result.metros.forEach(g => {
-          console.log(g);
-        });
+      .then(stories, tab => {
+        this.stories = stories.result.metros;
+        //this.tab.push(item.slug);
+       //tab.push(item.name);
+        this.affichetrafic();
       });
-
-    return this.calcArea();
   }
-
-  calcArea() {
-    return console.log(this.g + "fefefeffefefefef");
+  affichetrafic(element, tab) {
+    this.stories.metros.forEach(element => {
+            this.tab.push(element.slug);
+            console.log(this.tab);
+      //console.log(element.line + " " + element);
+    });
+    return console.log(this.element);
   }
-};
-const carré = new Rectangle();
-
-console.log(carré.area);
+}
+const test = new Requete(this.g, this.f, this.tab);
+//console.log(test.trafic());
+test.trafic();
+console.log(test.trafic());
 
 let mainMenuToggle = false;
 /*menu.toggle('toggle me', 'a', {
@@ -150,47 +204,6 @@ function foodSelectText(ctx) {
   return `${person} likes ${hisChoice} currently.`;
 }
 
-let isAndroid = true;
-menu
-  .submenu(
-    "Trafic Menu",
-    "trafic",
-    new TelegrafInlineMenu("", {
-      photo: () =>
-        isAndroid
-          ? "http://www.tac-productions.fr/wp-content/uploads/2017/02/Logo-RerA-carr%C3%A91-e1487256053310.png"
-          : "https://telegram.org/img/SiteiOs.jpg"
-    })
-  )
-  .setCommand("photo")
-  .simpleButton("Just a button", "a", {
-    doFunc: async ctx => ctx.reply("As am I!")
-  })
-  .select("img", ["iOS", "Android", "Windows mobile"], {
-    isSetFunc: (_ctx, key) => (key === "Android" ? isAndroid : !isAndroid),
-    setFunc: (_ctx, key) => {
-      isAndroid = key === "Android";
-    }
-  });
-
-menu.setCommand("start");
-
-menu.simpleButton("click me", "c", {
-  doFunc: async ctx => ctx.answerCbQuery("you clicked me!"),
-  hide: () => mainMenuToggle
-});
-
-menu.simpleButton("nique ta mere", "f", {
-  doFunc: async ctx => ctx.answerCbQuery("niker vous"),
-  joinLastRow: true,
-  hide: () => mainMenuToggle
-});
-
-menu.simpleButton("click me harder", "d", {
-  doFunc: async ctx => ctx.answerCbQuery("you can do better!"),
-  joinLastRow: true,
-  hide: () => mainMenuToggle
-});
 
 bot.use((ctx, next) => {
   if (ctx.callbackQuery) {
@@ -207,7 +220,7 @@ bot.use((ctx, next) => {
 bot.use(
   menu.init({
     backButtonText: "back…",
-    mainMenuButtonText: "menu principal"
+    mainMenuButtonText: "Menu principal"
   })
 );
 
@@ -245,7 +258,7 @@ bot.startPolling();
 const inputErrMsg = `💥 BOOM... 🔩☠🔧🔨⚡️ `;
 
 const aboutMsg = "https://github.com/solidusnake/Ratp_bot";
-const ligne = "selectionner le mode de transports";
+const lignen = "selectionner le mode de transports";
 const station = "selectionner la station";
 
 function getRegExp(command) {

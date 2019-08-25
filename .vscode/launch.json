@@ -6,12 +6,14 @@
     "configurations": [
 
 
+
+
         {
             "type": "node",
             "request": "launch",
             "name": "nodemon",
             "runtimeExecutable": "nodemon",
-            "program": "${workspaceFolder}/requete.js",
+            "program": "${workspaceFolder}/app.js",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
