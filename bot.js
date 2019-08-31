@@ -9,6 +9,223 @@ const { readFileSync } = require("fs");
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
+class Schedules {
+  constructor(type, line, station) {
+    /* url server */
+    this.url = "https://api-ratp.pierre-grimaud.fr/v4/schedules/";
+    /* type metros or rers */
+    this.type = type;
+    /* line */
+    this.line = line;
+    /* station example chatelet */
+    this.station = station;
+
+    this.stories;
+    this.tab = [];
+    this.tab1 = [];
+    this.trans;
+  }
+  requete() {
+    const url = this.url;
+    const type = this.type;
+    const line = this.line;
+    const station = this.station;
+
+    fetch(url + type + line + station)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        return response.json();
+      })
+      .then(stories => {
+        this.trans = stories.result.schedules;
+        //this.trans = stories.result.rers;
+        this.trans.forEach(item => {
+          //this.trans;
+          //this.type = result.metros
+          this.item = item;
+          //this.tab.push(this.item.name);
+          //console.log(this.item.destination);
+        });
+        this.affiche();
+        //this.destination();
+      });
+  }
+  affiche() {
+    //console.log(this.stories);
+    //console.log(this.tab);
+    this.message(), this.destination();
+  }
+  message() {
+    this.trans;
+    //this.trans = stories.result.rers;
+    this.trans.forEach(item => {
+      this.trans;
+      //this.type = result.metros
+      this.item = item;
+      this.tab.push(this.item.message);
+    });
+    console.log(this.tab);
+  }
+  destination() {
+    this.trans;
+    //this.trans = stories.result.rers;
+    this.trans.forEach(item => {
+      this.trans;
+      //this.type = result.metros
+      this.item = item;
+      this.tab1.push(this.item.destination);
+      //console.log(this.item.destination);
+    });
+    console.log(this.tab1);
+  }
+}
+class Stations {
+  constructor(type, line, way) {
+    /* url server */
+    this.url = "https://api-ratp.pierre-grimaud.fr/v4/stations/";
+    /* type metros or rers */
+    this.type = type;
+    /* line */
+    this.line = line;
+    /* way */
+    this.way = way;
+
+    this.stories;
+    this.tab;
+    this.tab1;
+    this.trans;
+    var montest = ["g"];
+  }
+  requete() {
+    const url = this.url;
+    const type = this.type;
+    const line = this.line;
+    const way = this.way;
+
+    fetch(url + type + line + way)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        return response.json();
+      })
+      .then(stories => {
+        this.trans = stories.result.stations;
+        //this.trans = stories.result.rers;
+        this.trans.forEach(item => {
+          //this.trans;
+          //this.type = result.metros
+          this.item = item;
+          //this.tab.push(this.item.message);
+          //console.log(this.item.name);
+        });
+        this.affiche();
+        //this.destination();
+      });
+  }
+  affiche() {
+    //console.log(this.stories);
+    //console.log(this.tab);
+    this.name(), this.slug();
+  }
+  name() {
+    this.trans;
+    //this.trans = stories.result.rers;
+    this.trans.forEach(item => {
+      this.trans;
+      //this.type = result.metros
+      this.item = item;
+      this.tab.push(this.item.name);
+    });
+    return (this.tab = montest);
+  }
+  slug() {
+    this.trans;
+    //this.trans = stories.result.rers;
+    this.trans.forEach(item => {
+      this.trans;
+      //this.type = result.metros
+      this.item = item;
+      this.tab1.push(this.item.slug);
+      //console.log(this.item.destination);
+    });
+    console.log(this.tab1);
+  }
+}
+class Lines {
+  constructor() {
+    /* url server */
+    this.url = "https://api-ratp.pierre-grimaud.fr/v4/lines/";
+    /* type metros or rers */
+    //this.type = type;
+    this.stories;
+    this.tab = [];
+    this.tab1 = [];
+    this.trans;
+  }
+  requete() {
+    const url = this.url;
+    //const type = this.type;
+
+    fetch(url)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        return response.json();
+      })
+      .then(stories => {
+        this.trans = stories.result.metros;
+        //this.trans = stories.result.rers;
+        this.trans.forEach(item => {
+          //this.trans;
+          //this.type = result.metros
+          this.item = item;
+          //this.tab.push(this.item.message);
+          //console.log(this.item.name);
+        });
+        this.affiche();
+        //this.destination();
+      });
+  }
+  affiche() {
+    //console.log(this.stories);
+    //console.log(this.tab);
+    this.name(), this.code();
+  }
+  name() {
+    this.trans;
+    //this.trans = stories.result.rers;
+    this.trans.forEach(item => {
+      this.trans;
+      //this.type = result.metros
+      this.item = item;
+      this.tab.push(this.item.name);
+    });
+    console.log(this.tab);
+  }
+  code() {
+    this.trans;
+    //this.trans = stories.result.rers;
+    this.trans.forEach(item => {
+      this.trans;
+      //this.type = result.metros
+      this.item = item;
+      this.tab1.push(this.item.code);
+      //console.log(this.item.destination);
+    });
+    console.log(this.tab1);
+  }
+}
+
+//const test1 = new Schedules("rers/", "A/", "charles+de+gaulle+etoile/R");
+//test1.requete();
+//const test2 = new Schedules("metros/", "1/", "chatelet/R");
+//test2.requete();
+//const s = new Stations("metros/", "Orv", "?way=A");
+//s.requete();
 
 const helpMsg = `Command reference:
 /start - Start bot (mandatory in groups)
@@ -18,192 +235,74 @@ const helpMsg = `Command reference:
 /about - A propos du bot
 /help - Afficher la page d'aide'`;
 
-
 const people = { Mark: {}, Paul: {} };
 const food = ["bread", "cake", "bananas"];
+var selectedKey = "b";
+//this.dsdsdsds = selectedKey;
+var lastindex = "3";
+var ggg = [];
+const menu = new TelegrafInlineMenu("Main Menu");
 
-  const menu = new TelegrafInlineMenu("Main Menu", recupligne());
+menu.urlButton("RATP-Bot", "https://github.com/solidusnake/Ratp_bot");
+//var selectedKey = "b";
 
-  menu.urlButton("RATP-Bot", "https://github.com/solidusnake/Ratp_bot");
-  var selectedKey = "b";
- var copy = [];
- var tesdd = [];
-  var ligne = ["Ligne 1", "Ligne 2", "Ligne 3", "Ligne 4"];
-  menu.select("Main", tesdd, {
-    setFunc: async (ctx, key) => {
-      selectedKey = key;
+const lines = new Lines();
+lines.requete();
 
-      await ctx.answerCbQuery(`you selected ${key}`);
-    },
-    isSetFunc: (_ctx, key) => key === selectedKey
-  });
-
-
-function Affiche_tableau() {
-console.log("fefefeffee", tesdd);
+//var tesdd = [];
+function dom(lastindex) {
+  console.log(lastindex + "toto");
 }
+//var montab = [];
 
-  function recupligne(selectedKey) {
-    console.log(selectedKey + "ligne");
-      fetch("https://api-ratp.pierre-grimaud.fr/v4/lines")
-          .then(function(response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server");
-            }
-            return response.json();
-          })
-          .then(function(stories) {
-            stories.result.metros.forEach(item => {
-              tesdd.push(item.name);
-              //tesdd.push() = item.name.split();  
-            });
-          });
-  }
+menu.select("ligne", lines.tab1, {
+  setFunc: async (ctx, key) => {
+    selectedKey = key;
+    //var gg = new Stations("metros/", selectedKey, "?way=A");
+    //gg.requete();
+    lastindex = key;
+    console.log(lastindex);
 
-  menu.setCommand("start");
-  const validez = new TelegrafInlineMenu("Validez");
-  menu.submenu("Validez", selectedKey, validez, {});
+    var dup_array = ["ghghghh", "fefefef"];
+    //dup_array = stations.tab;
 
-  validez.question("Non Station", "add", {
-    questionText: "Quel nom de station voulez vous choisir",
+    //console.log(shallowCopy, "DEDEDEDEDE");
+    //this.sts = stations.tab1;
+    //this.lastindex = key;
 
-    setFunc: (_ctx, key) => {
-      people[key] = {};
-    }
-  });
- var array = 30;
+    await ctx.answerCbQuery(`you selected ${key}`);
+  },
+  isSetFunc: (_ctx, key) => key === selectedKey
+});
 
-  for (let index = 0; index < array; index++) {
-      validez.simpleButton(index.toString(), index.toString(), {
-        doFunc: async ctx => ctx.answerCbQuery(selectedKey),
-        joinLastRow: true,
-        hide: () => mainMenuToggle
-      });
-    
-  }
+const validez = new TelegrafInlineMenu("Validez");
 
+var stations = new Stations("metros/", "5", "?way=A");
+stations.requete();
 
-
-/*menu transport*/
-
-/*menu transport*/
-
-/*bouton validez*/
-
-/*bouton validez*/
-
-const foodSelectSubmenu = new TelegrafInlineMenu(foodSelectText)
-  .toggle("Prefer Tee", "t", {
-    setFunc: (ctx, choice) => {
-      const person = ctx.match[1];
-      people[person].tee = choice;
-    },
-    isSetFunc: ctx => {
-      const person = ctx.match[1];
-      return people[person].tee === true;
-    }
-  })
-  .select("f", food, {
-    setFunc: (ctx, key) => {
-      const person = ctx.match[1];
-      people[person].food = key;
-    },
-    isSetFunc: (ctx, key) => {
-      const person = ctx.match[1];
-      return people[person].food === key;
-    }
-  });
-
-/*validez.selectSubmenu('p', () => Object.keys(people), foodSelectSubmenu, {
-    textFunc: personButtonText,
-    columns: 2
-})*/
-
-
-/*fetch(url).then(function(response) {
-        if (response.status >= 400) {
-            throw new Error("Bad response from server");
-        }
-        return response.json();
-
-            }).then(function(stories) {
-        stories.result.metros.forEach((item) => {
-         //var tt = item.message;
-            const fd =  item.message;
-         //copie.push(item.message);
-            })
-    }); 
-*/
-class Requete {
-  constructor(g, f, h,tab) {
-    var tab = ["fefefefef"];
-    this.tab = tab;
-    this.stories = g;
-    this.element = f;
-    this.line = h;
-    this.slug;
-    this.title;
-    this.message;
-    this.metros = "https://api-ratp.pierre-grimaud.fr/v4/traffic";
-  }
-  trafic(stories) {
-    const url = this.metros;
-    fetch(url)
-      .then(response => {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server");
-        }
-        return response.json();
-      })
-      .then(stories, tab => {
-        this.stories = stories.result.metros;
-        //this.tab.push(item.slug);
-       //tab.push(item.name);
-        this.affichetrafic();
-      });
-  }
-  affichetrafic(element, tab) {
-    this.stories.metros.forEach(element => {
-            this.tab.push(element.slug);
-            console.log(this.tab);
-      //console.log(element.line + " " + element);
+//console.log(stations.item);
+validez.select("stations", "ededdeded", {
+  setFunc: async (ctx, key) => {
+    //var blogsdata_all;
+    //stations.item = blogsdata_all;
+    stations.item.forEach(function(element) {
+      console.log(element);
     });
-    return console.log(this.element);
-  }
-}
-const test = new Requete(this.g, this.f, this.tab);
-//console.log(test.trafic());
-test.trafic();
-console.log(test.trafic());
+    //ggg = this.deeded.tab1;
+    //console.log(stations.tab);
+    selectedKey = key;
+    await ctx.answerCbQuery(`you selected ${key}`);
+  },
+  isSetFunc: (_ctx, key) => key === selectedKey
+});
+//const toto = new TelegrafInlineMenu("Menut");
 
-let mainMenuToggle = false;
-/*menu.toggle('toggle me', 'a', {
-    setFunc: (_ctx, newVal) => {
-        mainMenuToggle = newVal
-        console.log(selectedKey + "fefefefeffeefffkofvklfkl")
+menu.submenu("Validez", selectedKey, validez, {});
+const horaire = new TelegrafInlineMenu("Ok");
 
-    },
-    isSetFunc: () => mainMenuToggle
-})*/
+validez.submenu("OK", selectedKey, horaire, {});
 
-function personButtonText(_ctx, key) {
-  const entry = people[key];
-
-  if (!entry || !entry.food) {
-    return key;
-  }
-  return `${key} (${entry.food})`;
-}
-function foodSelectText(ctx) {
-  const person = ctx.match[1];
-  const hisChoice = people[person].food;
-  if (!hisChoice) {
-    return `${person} is still unsure what to eat.`;
-  }
-
-  return `${person} likes ${hisChoice} currently.`;
-}
-
+menu.setCommand("start");
 
 bot.use((ctx, next) => {
   if (ctx.callbackQuery) {
@@ -234,26 +333,6 @@ bot.catch(error => {
 });
 
 bot.startPolling();
-
-/*fetch('https://api-ratp.pierre-grimaud.fr/v4/traffic')
-    .then(function (response) {
-        if (response.status >= 400) {
-            throw new Error("Bad response from server");
-        }
-        return response.json();
-    })
-    .then(function (stories) {
-        stories.result.rers.forEach((item) => {
-            //console.log(item);
-            //telegram.editMessageText(chatId, messageId, inlineMessageId, text, [extra])
-
-
-            //ctx.reply(item.line + "    " + item.message);
-            //ctx.reply(item.line + "    " +  item.message);
-            t = item.message
-            console.log("fefefefefeffefefef'rgjnfejrgjnrjnfrjn" + t);
-        })
-    });*/
 
 const inputErrMsg = `💥 BOOM... 🔩☠🔧🔨⚡️ `;
 
@@ -300,29 +379,6 @@ function logOutMsg(ctx, text) {
     text
   );
 }
-
-bot.command("broadcast", ctx => {
-  if (ctx.from.id == config.adminChatId) {
-    var words = ctx.message.text.split(" ");
-    words.shift(); //remove first word (which ist "/broadcast")
-    if (words.length == 0)
-      //don't send empty message
-      return;
-    var broadcastMessage = words.join(" ");
-    var userList = dataService.getUserList();
-    console.log(
-      "Sending broadcast message to",
-      userList.length,
-      "users:  ",
-      broadcastMessage
-    );
-    userList.forEach(userId => {
-      console.log(">", { id: userId }, broadcastMessage);
-      ctx.telegram.sendMessage(userId, broadcastMessage);
-    });
-  }
-});
-
 bot.command("start", ctx => {
   logMsg(ctx);
   dataService.registerUser(ctx);
@@ -342,11 +398,6 @@ bot.command("stop", ctx => {
   ctx.reply(m);
 });
 
-bot.command(["incx", "decx", "getx", "setx", "resetx"], ctx => {
-  logMsg(ctx);
-  logOutMsg(ctx, incNMsg);
-  ctx.reply(incNMsg);
-});
 bot.command("help", ctx => {
   logMsg(ctx);
   logOutMsg(ctx, helpMsg);
@@ -359,62 +410,8 @@ bot.command("about", ctx => {
   ctx.reply(aboutMsg);
 });
 
-bot.command("getall", ctx => {
-  logMsg(ctx);
-  counters = dataService.getAllCounters(ctx.chat.id);
-  msg = "";
-  Object.keys(counters).forEach(counterId => {
-    msg += "[" + counterId + "] " + counters[counterId].value + "\n";
-  });
-  logOutMsg(ctx, msg);
-  ctx.reply(msg);
-});
-
-bot.hears(getRegExp("lignes"), ctx => {
-  //ligne de transport
-  //logMsg(ctx);
-  currentCommand = "lignes";
-  ctx.reply("/metro /rer");
-
-  bot.hears(getRegExp("metro"), ctx => {
-    //metro
-    fetch("https://api-ratp.pierre-grimaud.fr/v4/lines/metros")
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server");
-        }
-        return response.json();
-      })
-      .then(function(stories) {
-        console.log(stories);
-
-        stories.result.metros.forEach(item => {
-          //console.log(item);
-          //telegram.editMessageText(chatId, messageId, inlineMessageId, text, [extra])
-
-          setTimeout(() => {
-            ctx.reply(item.name + " /" + item.code + "    " + item.directions);
-            logOutMsg(ctx, 30);
-          }, 50); //workaround to send this message definitely as second message
-
-          //ctx.reply(item.line + "    " +  item.message);
-        });
-      });
-  });
-});
-
-bot.hears(getRegExp("dec"), ctx => {
-  logMsg(ctx);
-});
-
-bot.hears(getRegExp("reset"), ctx => {});
-
 bot.hears(getRegExp("get"), ctx => {
   logMsg(ctx);
 });
-
-bot.hears(getRegExp("set"), ctx => {});
-
-bot.startPolling();
 
 module.exports = {};
