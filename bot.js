@@ -280,8 +280,8 @@ const validez = new TelegrafInlineMenu("Validez");
 var stations = new Stations("metros/", "5", "?way=A");
 stations.requete();
 
-//console.log(stations.item);
-validez.select("stations", "ededdeded", {
+console.log(stations.tab1);
+validez.select("stations", "stations.tab", {
   setFunc: async (ctx, key) => {
     //var blogsdata_all;
     //stations.item = blogsdata_all;
