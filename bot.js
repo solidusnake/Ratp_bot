@@ -93,8 +93,8 @@ class Stations {
     this.way = way;
 
     this.stories;
-    this.tab;
-    this.tab1;
+    this.tab = [];
+    this.tab1 = [];
     this.trans;
     var montest = ["g"];
   }
@@ -139,7 +139,7 @@ class Stations {
       this.item = item;
       this.tab.push(this.item.name);
     });
-    return (this.tab = montest);
+    return this.tab;
   }
   slug() {
     this.trans;
@@ -219,14 +219,6 @@ class Lines {
     console.log(this.tab1);
   }
 }
-
-//const test1 = new Schedules("rers/", "A/", "charles+de+gaulle+etoile/R");
-//test1.requete();
-//const test2 = new Schedules("metros/", "1/", "chatelet/R");
-//test2.requete();
-//const s = new Stations("metros/", "Orv", "?way=A");
-//s.requete();
-
 const helpMsg = `Command reference:
 /start - Start bot (mandatory in groups)
 /ligne - Choisir ligne de Metro Rer ou bus
@@ -235,41 +227,25 @@ const helpMsg = `Command reference:
 /about - A propos du bot
 /help - Afficher la page d'aide'`;
 
-const people = { Mark: {}, Paul: {} };
-const food = ["bread", "cake", "bananas"];
 var selectedKey = "b";
-//this.dsdsdsds = selectedKey;
-var lastindex = "3";
-var ggg = [];
+var lastindex = "2";
+
 const menu = new TelegrafInlineMenu("Main Menu");
 
 menu.urlButton("RATP-Bot", "https://github.com/solidusnake/Ratp_bot");
-//var selectedKey = "b";
 
 const lines = new Lines();
 lines.requete();
 
-//var tesdd = [];
-function dom(lastindex) {
-  console.log(lastindex + "toto");
-}
-//var montab = [];
-
+//select lines
 menu.select("ligne", lines.tab1, {
   setFunc: async (ctx, key) => {
     selectedKey = key;
-    //var gg = new Stations("metros/", selectedKey, "?way=A");
-    //gg.requete();
+    //var stations = new Stations("metros/", selectedKey, "?way=A");
+    //stations.requete();
+    //console.log(stations.tab);
     lastindex = key;
-    console.log(lastindex);
-
-    var dup_array = ["ghghghh", "fefefef"];
-    //dup_array = stations.tab;
-
-    //console.log(shallowCopy, "DEDEDEDEDE");
-    //this.sts = stations.tab1;
-    //this.lastindex = key;
-
+    console.log(lastindex, "ligne", selectedKey);
     await ctx.answerCbQuery(`you selected ${key}`);
   },
   isSetFunc: (_ctx, key) => key === selectedKey
@@ -277,31 +253,26 @@ menu.select("ligne", lines.tab1, {
 
 const validez = new TelegrafInlineMenu("Validez");
 
-var stations = new Stations("metros/", "5", "?way=A");
-stations.requete();
+console.log("stations");
 
-console.log(stations.tab1);
-validez.select("stations", "stations.tab", {
-  setFunc: async (ctx, key) => {
-    //var blogsdata_all;
-    //stations.item = blogsdata_all;
-    stations.item.forEach(function(element) {
-      console.log(element);
-    });
-    //ggg = this.deeded.tab1;
-    //console.log(stations.tab);
+//select stations
+var stations;
+validez.select("stations", "stations.tab1", {
+  stations = new Stations("metros/", "2", "?way=A")
+  
+  ,setFunc: async (ctx, key) => {
+    stations.requete();
+    console.log("valider", selectedKey);
     selectedKey = key;
     await ctx.answerCbQuery(`you selected ${key}`);
   },
   isSetFunc: (_ctx, key) => key === selectedKey
 });
-//const toto = new TelegrafInlineMenu("Menut");
 
 menu.submenu("Validez", selectedKey, validez, {});
 const horaire = new TelegrafInlineMenu("Ok");
 
 validez.submenu("OK", selectedKey, horaire, {});
-
 menu.setCommand("start");
 
 bot.use((ctx, next) => {
